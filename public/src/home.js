@@ -23,6 +23,11 @@ function getBooksBorrowedCount(books) {
     })
     return borrowedBooks;
 }
+
+//helper function
+const arraySortSlicer = (array, sliceNumber) => {
+  return array.sort((valueA, valueB) => valueB.count - valueA.count)
+  .slice(0, sliceNumber);}
 //
 
 function getMostCommonGenres(books) {
@@ -31,7 +36,7 @@ function getMostCommonGenres(books) {
   count: number of times"
 }]
 */
-//Creates a counter object from an array of books
+// Creates a counter object from an array of books return object
 const objectGenreCounter = (array) => {
   const genreCounter = {}
    array.forEach((book) => {
@@ -42,11 +47,16 @@ const objectGenreCounter = (array) => {
   //Create a function that reshapes the genre object
    const objectGenreReshaper = (object) => {
     return Object.keys(object)
-      .map((genre) => ({name: genre, count: object[genre]}))
-        .sort((valueA, valueB) => valueB.count - valueA.count)
-          .slice(0,5)};
-//reuturns the most common genres
-  return objectGenreReshaper(objectGenreCounter(books))
+      .map((genre) => ({name: genre, count: object[genre]}))}
+        // .sort((valueA, valueB) => valueB.count - valueA.count)
+        //   .slice(0,5)};
+
+//returns the most common genres
+  const counterResult = objectGenreCounter(books)
+  const genreReshapeResult = objectGenreReshaper(counterResult)
+  const sortSliceResult = arraySortSlicer(genreReshapeResult, 5)
+  return sortSliceResult
+  //return console.log(objectGenreReshaper(objectGenreCounter(books)))
 
 }
 //
@@ -58,10 +68,11 @@ function getMostPopularBooks(books) {
     ...
   ]
   */
-  return books.map((book) => 
-  ({name: book.title, count: book.borrows.length}))
-    .sort((valueA, valueB) => valueB.count - valueA.count)
-      .slice(0,5);
+  const reshapeBooks = books.map((book) => ({name: book.title, count: book.borrows.length}))
+  const sortSlice = arraySortSlicer(reshapeBooks, 5);
+  return sortSlice
+    // .sort((valueA, valueB) => valueB.count - valueA.count)
+    //   .slice(0,5);
 }
 
 
@@ -78,11 +89,13 @@ function getMostPopularAuthors(books, authors) {
 
 //Remapping the authors array while getting the author name and 
 //matching the author id with authorCount id
-  return authors.map((author) => { 
+  const remapping = authors.map((author) => { 
    let authorName = `${author.name.first} ${author.name.last}`
   return ({name:authorName, count: authorCount[author.id]})
-}).sort((valueA, valueB) => valueB.count - valueA.count).slice(0,5);
-
+})
+  //.sort((valueA, valueB) => valueB.count - valueA.count)
+    //.slice(0,5);
+  return arraySortSlicer(remapping, 5);
 }
 
 module.exports = {
