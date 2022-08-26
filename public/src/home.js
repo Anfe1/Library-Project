@@ -13,6 +13,8 @@ function getTotalAccountsCount(accounts) {
 }
 
 function getBooksBorrowedCount(books) {
+  
+
   let borrowedBooks = 0;
 
      books.filter((book) => {
@@ -21,6 +23,7 @@ function getBooksBorrowedCount(books) {
     })
     return borrowedBooks;
 }
+//
 
 function getMostCommonGenres(books) {
 /*reults = [{
@@ -28,20 +31,25 @@ function getMostCommonGenres(books) {
   count: number of times"
 }]
 */
-//Create an empty object to store a genre counter
-const genreCounter = {}
-//Iterate through books array to test if the create object contain any genre values
-const container = books.forEach((book) => {
-  (genreCounter[book.genre] != null) ? genreCounter[book.genre]++: genreCounter[book.genre] = 1;
-})
-
-//Access the genreCounter to reshape it into an array with the required properties,
-//sorted and sliced to only include the top 5 values.
-return Object.keys(genreCounter).map((genre) => 
-({name: genre, count: genreCounter[genre]})).sort((valueA, valueB) => 
-valueB.count - valueA.count).slice(0,5);
+//Creates a counter object from an array of books
+const objectGenreCounter = (array) => {
+  const genreCounter = {}
+   array.forEach((book) => {
+    (genreCounter[book.genre] != null) ? genreCounter[book.genre]++: genreCounter[book.genre] = 1;
+  });
+   return genreCounter
+  }
+  //Create a function that reshapes the genre object
+   const objectGenreReshaper = (object) => {
+    return Object.keys(object)
+      .map((genre) => ({name: genre, count: object[genre]}))
+        .sort((valueA, valueB) => valueB.count - valueA.count)
+          .slice(0,5)};
+//reuturns the most common genres
+  return objectGenreReshaper(objectGenreCounter(books))
 
 }
+//
 
 function getMostPopularBooks(books) {
   /*result = [
@@ -51,8 +59,9 @@ function getMostPopularBooks(books) {
   ]
   */
   return books.map((book) => 
-  ({name: book.title, count: book.borrows.length})).sort((valueA, valueB) =>
-    valueB.count - valueA.count).slice(0,5);
+  ({name: book.title, count: book.borrows.length}))
+    .sort((valueA, valueB) => valueB.count - valueA.count)
+      .slice(0,5);
 }
 
 
